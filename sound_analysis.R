@@ -15,7 +15,7 @@ aci <- acoustic_complexity(audio1) #execute for dataset
   ##average values taken for calculation
     aci_avg<-mean(c(aci_t_l,aci_t_r))
     aci_bymin_avg<-mean(c(aci_l_bymin,aci_r_bymin))
-
+      
 #Bioacoustic index
 bi <- bioacoustic_index(audio1) #execute for dataset
   bi_l<-bi$left_area
@@ -48,6 +48,7 @@ ndsi_value <- ndsi(audio1) #execute for dataset
     )
     
 View(sound_results)
-  
-  
-  
+
+#This script is executed for multiple labels from a single recording; multiple labels from the single location would then be analyzed to calculate average indices values
+
+
