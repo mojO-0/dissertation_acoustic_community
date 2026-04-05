@@ -1,22 +1,19 @@
-# ============================================================
-# SITE-LEVEL ACOUSTIC ANALYSIS SCRIPT
-# ============================================================
-# Workflow:
-#   1. Run analysis for each site (3 replicates per site)
-#   2. Combine replicates -> single site-level summary
-#   3. Combine all 4 sites -> master comparison table
-# ============================================================
+# Acoustic indices analysis script
 
+# Analysis is performed for each site (3 replicates per site)
+# Replicates are combined for single site-level summary
+# Data from all 4 sites are combined into a master table
+
+# Loading of necessary packages
 library(seewave)
 library(tuneR)
 library(soundecology)
 library(tidyverse)
 
-# ------------------------------------------------------------
-# HELPER FUNCTION: Run analysis for one site
-# Takes a named list of replicates and a site name,
-# returns a per-file dataframe tagged with Site and Replicate
-# ------------------------------------------------------------
+# ----
+# Helper Function: Run analysis for one site -> make a list of replicates within a site name
+# Will return a per-file dataframe tagged with the particular site and the replicate
+
 run_site_analysis <- function(replicates, site_name) {
   
   all_data_list <- list()
@@ -54,22 +51,21 @@ run_site_analysis <- function(replicates, site_name) {
 }
 
 
-# ------------------------------------------------------------
-# HELPER FUNCTION: Aggregate replicates -> site-level summary
-# Averages all per-file rows into a SINGLE row per site
-# ------------------------------------------------------------
+# ----
+# Helper function: Aggregate replicate data for a site-specific summary
+
 aggregate_site <- function(site_raw_df) {
   
   site_summary <- site_raw_df %>%
     group_by(Site) %>%
     summarise(
-      N_files          = n(),                      # total files processed
+      N_files          = n(),               #total files processed
       ACI_site         = mean(ACI_avg,         na.rm = TRUE),
       BI_site          = mean(BI_avg,          na.rm = TRUE),
       NDSI_site        = mean(NDSI_avg,        na.rm = TRUE),
       Anthrophony_site = mean(Anthrophony_avg, na.rm = TRUE),
       Biophony_site    = mean(Biophony_avg,    na.rm = TRUE),
-      # Standard deviations - useful for inter-site comparison
+      # Standard deviations -> for inter-site comparison
       ACI_sd           = sd(ACI_avg,         na.rm = TRUE),
       BI_sd            = sd(BI_avg,          na.rm = TRUE),
       NDSI_sd          = sd(NDSI_avg,        na.rm = TRUE),
@@ -81,7 +77,8 @@ aggregate_site <- function(site_raw_df) {
   return(site_summary)
 }
 
-# Site specific replicates
+# Site specific replicates -- contains file path for call back from each site
+#----
 replicates_site1 <- list(
   "Rep1" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/botgarden1/01Label.wav",
              "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/botgarden1/03Label.wav",
@@ -114,8 +111,8 @@ replicates_site1 <- list(
              "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/botgarden4/21Label.wav",
              "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/botgarden4/24Label.wav")
 )
-
-
+  
+#----
 replicates_site2 <- list(
   "Rep1" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/guquarter1/01Label.wav",
              "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/guquarter1/03Label.wav",
@@ -148,48 +145,100 @@ replicates_site2 <- list(
              "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/guquarter3/21Label.wav",
              "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/guquarter3/23Label.wav")
 )
-
-
+ 
+#----
 replicates_site3 <- list(
-  "Rep1" = c("D:/path/to/site3/rep1/01Label.wav"),
-  "Rep2" = c("D:/path/to/site3/rep2/01Label.wav"),
-  "Rep3" = c("D:/path/to/site3/rep3/01Label.wav")
+  "Rep1" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/01Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/03Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/05Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/07Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/10Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/12Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/15Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/18Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/21Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland1/24Label.wav"),
+  "Rep2" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/01Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/03Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/05Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/07Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/10Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/12Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/15Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/18Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/21Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland2/24Label.wav"),
+  "Rep3" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/01Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/03Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/05Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/07Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/10Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/12Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/15Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/18Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/21Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/aecwetland3/23Label.wav")
+)
+
+#----
+replicates_site4 <- list( 
+  "Rep1" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/01Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/03Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/05Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/07Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/10Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/12Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/15Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/18Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/21Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar1/24Label.wav"),
+  "Rep2" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/01Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/03Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/05Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/07Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/10Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/12Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/15Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/18Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/21Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar2/24Label.wav"),
+  "Rep3" = c("D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/01Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/03Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/05Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/07Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/10Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/12Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/15Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/18Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/21Label.wav",
+             "D:/M.Sc/4th Sem AEWB/Dissertation/audiolabels/lankeshwar3/23Label.wav")
 )
 
 
-replicates_site4 <- list(
-  "Rep1" = c("D:/path/to/site4/rep1/01Label.wav"),
-  "Rep2" = c("D:/path/to/site4/rep2/01Label.wav"),
-  "Rep3" = c("D:/path/to/site4/rep3/01Label.wav")
-)
 
 
-# ============================================================
-# RUN ANALYSIS FOR ALL 4 SITES
-# ============================================================
+# Analysis is repeated for all 4 sites
 
-# -- Step 1: Raw per-file results for each site --
+# The data from 4 sites would be compiled into a single data frame ::
+
+# Per-file results for each site ::
 raw_site1 <- run_site_analysis(replicates_site1, site_name = "botanicalgarden")
 raw_site2 <- run_site_analysis(replicates_site2, site_name = "guquarter")
 raw_site3 <- run_site_analysis(replicates_site3, site_name = "aecwetland")
 raw_site4 <- run_site_analysis(replicates_site4, site_name = "lankeshwar")
 
-# -- Step 2: Combine raw results into one master file-level table --
+# Raw results into one master file-level table ::
 master_raw_all_sites <- bind_rows(raw_site1, raw_site2, raw_site3, raw_site4)
 
-# -- Step 3: Aggregate each site's replicates into a single summary row --
+# Each site replicates are aggregated into a single summary row ::
 summary_site1 <- aggregate_site(raw_site1)
 summary_site2 <- aggregate_site(raw_site2)
 summary_site3 <- aggregate_site(raw_site3)
 summary_site4 <- aggregate_site(raw_site4)
 
-# -- Step 4: Combine all 4 site summaries -> final comparison table --
+# All site summaries are combined into a single comparison table
 site_comparison_table <- bind_rows(summary_site1, summary_site2,
                                    summary_site3, summary_site4)
-
-# ============================================================
-# VIEW & EXPORT
-# ============================================================
 
 View(master_raw_all_sites)      # All raw file-level data, all sites
 View(site_comparison_table)     # One row per site, ready for comparison
