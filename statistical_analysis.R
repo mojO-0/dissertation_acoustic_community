@@ -5,7 +5,7 @@ library(corrplot)
 library(ggpubr)
 
 # 2. Load the dataset
-df <- read.csv("botanicalgarden.csv")
+df <- read.csv("guquarter.csv")
 
 # 3. Data Inspection
 print("--- Data Summary ---")
@@ -73,7 +73,7 @@ print(replicate_summary)
 library(tidyverse) # includes ggplot2, tidyr, and dplyr
 
 # 2. Load your data
-df <- read.csv("botanicalgarden.csv")
+df <- read.csv("guquarter.csv")
 
 # 3. Reshape the data from 'wide' to 'long' format
 # This is required for ggplot to create facets automatically
@@ -110,4 +110,4 @@ ggplot(df_long, aes(x = Replicate, y = Value, fill = Replicate)) +
   scale_fill_brewer(palette = "Pastel1")
 
 # 5. Save the plot
-ggsave("indices_by_replicate_R.png", width = 12, height = 8, dpi = 300)
+ggsave("indices_by_replicate_R2.png", width = 12, height = 8, dpi = 300)
