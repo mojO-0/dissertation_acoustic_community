@@ -57,6 +57,7 @@ for (rep_name in names(replicates)) {
     #Import and Calculate
     temp_audio <- readWave(f)
     aci <- acoustic_complexity(temp_audio)
+    aei <- acoustic_evenness(temp_audio)
     bi  <- bioacoustic_index(temp_audio)
     ndsi_val <- ndsi(temp_audio)
     
@@ -65,6 +66,7 @@ for (rep_name in names(replicates)) {
       Replicate = rep_name,  # This tags the data so you don't lose track
       File_Name = basename(f),
       ACI_avg = mean(c(aci$AciTotAll_left, aci$AciTotAll_right)),
+      AEI_avg = mean(c(aei$aei_left, aei$aei_right)),
       BI_avg = mean(c(bi$left_area, bi$right_area)),
       NDSI_avg = mean(c(ndsi_val$ndsi_left, ndsi_val$ndsi_right)),
       Anthrophony_avg = mean(c(ndsi_val$anthrophony_left, ndsi_val$anthrophony_right)),
